@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Dashboard - Instagram Analytics</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="container">
+      <header class="top">
+        <h1>Instagram Analytics</h1>
+        <nav>
+          <a href="/auth/logout" class="link">Sair</a>
+          <a href="/auth/refresh" class="link">Atualizar token</a>
+        </nav>
+      </header>
+
+      <section class="cards">
+        <div class="card">
+          <h3>Usuário</h3>
+          <p><%= profile.username || '—' %></p>
+        </div>
+        <div class="card">
+          <h3>Seguidores</h3>
+          <p><%= profile.followers_count != null ? profile.followers_count : '—' %></p>
+        </div>
+        <div class="card">
+          <h3>Mídias</h3>
+          <p><%= profile.media_count != null ? profile.media_count : '—' %></p>
+        </div>
+        <div class="card">
+          <h3>Token expira em</h3>
+          <p><%= expiresDays %> dia(s)</p>
+        </div>
+      </section>
+
+      <section class="media">
+        <h2>Publicações recentes</h2>
+        <form method="get" action="/dashboard">
+          <button class="btn" type="submit">Atualizar</button>
+        </form>
+
+        <% if (media && media.length) { %>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Tipo</th>
+                <th>Legenda</th>
+                <th>Likes</th>
+                <th>Comentários</th>
+                <th>Link</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% media.forEach(function(item){ %>
+                <tr>
+                  <td><%= item.id %></td>
+                  <td><%= item.media_type %></td>
+                  <td><%= item.caption ? item.caption.substring(0, 100) : '' %></td>
+                  <td><%= item.like_count != null ? item.like_count : '—' %></td>
+                  <td><%= item.comments_count != null ? item.comments_count : '—' %></td>
+                  <td><a href="<%= item.permalink %>" target="_blank" rel="noopener">Abrir</a></td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+        <% } else { %>
+          <p class="small muted">Nenhuma mídia encontrada ou erro ao carregar mídias.</p>
+        <% } %>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>
+        Este app usa apenas a API oficial do Instagram. Não coletamos sua senha. Não mostramos quem deixou de seguir ou quem visitou seu perfil, pois a API oficial não fornece esses dados.
+      </p>
+    </footer>
+  </body>
+</html>
